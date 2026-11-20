@@ -38,20 +38,23 @@ class ArmazenamentoLocal {
   Future<void> salvarVeiculo(Veiculo veiculo) =>
       _prefs.setString(_chaveVeiculo, jsonEncode(veiculo.paraJson()));
 
+  /// Registros corrompidos são descartados um a um, sem perder os demais.
   List<Abastecimento> lerAbastecimentos() {
+    final lista = _lerJson(_chaveAbastecimentos);
+    if (lista is! List<Object?>) return [];
+    return [for (final item in lista) ?_lerAbastecimento(item)];
+  }
+
+  static Abastecimento? _lerAbastecimento(Object? item) {
+    if (item is! Map<String, Object?>) return null;
     try {
-      return switch (_lerJson(_chaveAbastecimentos)) {
-        final List<Object?> lista => [
-          for (final item in lista) Abastecimento.deJson(item as Map<String, Object?>),
-        ],
-        _ => [],
-      };
+      return Abastecimento.deJson(item);
     } on TypeError {
-      return [];
+      return null;
     } on ArgumentError {
-      return [];
+      return null;
     } on FormatException {
-      return [];
+      return null;
     }
   }
 

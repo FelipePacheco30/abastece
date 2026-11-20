@@ -5,6 +5,7 @@ import '../../core/formatos.dart';
 import '../../core/tema.dart';
 import '../../models/veiculo.dart';
 import '../widgets/aviso.dart';
+import '../widgets/confirmacao.dart';
 
 /// Dados do veículo cadastrado e a opção de excluí-lo.
 class AbaVeiculo extends StatelessWidget {
@@ -14,12 +15,12 @@ class AbaVeiculo extends StatelessWidget {
 
   Future<void> _excluir(BuildContext context, Veiculo veiculo) async {
     final mensageiro = ScaffoldMessenger.of(context);
-    final confirmado = await showDialog<bool>(
-      context: context,
-      builder: (context) =>
-          _ConfirmacaoExclusao(veiculo: veiculo, abastecimentos: garagem.historico.trechos.length),
+    final confirmado = await confirmarExclusao(
+      context,
+      titulo: 'Excluir veículo?',
+      mensagem: _mensagemExclusao(veiculo, garagem.historico.trechos.length),
     );
-    if (confirmado != true) return;
+    if (!confirmado) return;
 
     await garagem.excluirVeiculo();
     mensageiro.avisar('Veículo e abastecimentos excluídos');
@@ -158,41 +159,11 @@ class _Informacao extends StatelessWidget {
   }
 }
 
-class _ConfirmacaoExclusao extends StatelessWidget {
-  const _ConfirmacaoExclusao({required this.veiculo, required this.abastecimentos});
-
-  final Veiculo veiculo;
-  final int abastecimentos;
-
-  String get _mensagem {
-    final nome = '${veiculo.marca} ${veiculo.modelo}';
-    return switch (abastecimentos) {
-      0 => 'O $nome será apagado deste aparelho.',
-      1 => 'O $nome e o abastecimento registrado serão apagados deste aparelho.',
-      final n => 'O $nome e os $n abastecimentos registrados serão apagados deste aparelho.',
-    };
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final cores = Theme.of(context).colorScheme;
-
-    return AlertDialog(
-      icon: Icon(Icons.delete_outline_rounded, color: cores.error),
-      title: const Text('Excluir veículo?'),
-      content: Text('$_mensagem Essa ação não pode ser desfeita.'),
-      actions: [
-        TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancelar')),
-        FilledButton(
-          onPressed: () => Navigator.pop(context, true),
-          style: FilledButton.styleFrom(
-            backgroundColor: cores.error,
-            foregroundColor: cores.onError,
-            minimumSize: const Size(64, 40),
-          ),
-          child: const Text('Excluir'),
-        ),
-      ],
-    );
-  }
+String _mensagemExclusao(Veiculo veiculo, int abastecimentos) {
+  final nome = '${veiculo.marca} ${veiculo.modelo}';
+  return switch (abastecimentos) {
+    0 => 'O $nome será apagado deste aparelho.',
+    1 => 'O $nome e o abastecimento registrado serão apagados deste aparelho.',
+    final n => 'O $nome e os $n abastecimentos registrados serão apagados deste aparelho.',
+  };
 }

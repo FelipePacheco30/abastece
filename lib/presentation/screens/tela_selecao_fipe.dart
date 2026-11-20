@@ -103,12 +103,13 @@ class _TelaSelecaoFipeState extends State<TelaSelecaoFipe> {
   Widget _erro(Object? erro) {
     return MensagemEstado(
       icone: Icons.cloud_off_rounded,
-      titulo: 'Não foi possível carregar as ${widget.itemNoPlural}',
+      titulo: 'Não foi possível carregar a lista',
       texto: erro is FalhaConsulta ? erro.mensagem : 'Ocorreu um erro inesperado.',
       acao: FilledButton.tonalIcon(
         onPressed: () => setState(() {
           _opcoes = widget.carregar();
         }),
+        style: FilledButton.styleFrom(minimumSize: const Size(0, 48)),
         icon: const Icon(Icons.refresh_rounded),
         label: const Text('Tentar novamente'),
       ),
@@ -135,7 +136,7 @@ class _TelaSelecaoFipeState extends State<TelaSelecaoFipe> {
         Padding(
           padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
           child: Text(
-            '${visiveis.length} ${widget.itemNoPlural}',
+            visiveis.length == 1 ? '1 resultado' : '${visiveis.length} resultados',
             style: Theme.of(context).textTheme.labelMedium?.copyWith(color: cores.onSurfaceVariant),
           ),
         ),

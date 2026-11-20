@@ -36,7 +36,9 @@ class Abastecimento {
   final int quilometragem;
   final DateTime data;
 
-  double get valorTotal => precoPorLitro * litros;
+  double get valorTotal => calcularValor(precoPorLitro, litros);
+
+  static double calcularValor(double precoPorLitro, double litros) => precoPorLitro * litros;
 
   Map<String, Object?> paraJson() => {
     'id': id,

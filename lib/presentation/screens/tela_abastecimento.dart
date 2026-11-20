@@ -7,6 +7,7 @@ import '../../core/tema.dart';
 import '../../models/abastecimento.dart';
 import '../widgets/aviso.dart';
 import '../widgets/campo_selecao.dart';
+import '../widgets/confirmacao.dart';
 
 /// Formulário para registrar um abastecimento ou editar um existente.
 class TelaAbastecimento extends StatefulWidget {
@@ -122,45 +123,38 @@ class _TelaAbastecimentoState extends State<TelaAbastecimento> {
     setState(() => _validarData = true);
     if (!_formulario.currentState!.validate() || _dataNoFuturo) return;
 
+    final mensageiro = ScaffoldMessenger.of(context);
     setState(() => _salvando = true);
-    final novo = _existente == null;
-    await widget.garagem.salvarAbastecimento(
-      Abastecimento(
-        id: _existente?.id ?? DateTime.now().microsecondsSinceEpoch.toString(),
-        combustivel: _combustivel,
-        precoPorLitro: lerDecimal(_preco.text)!,
-        litros: lerDecimal(_litros.text)!,
-        quilometragem: int.parse(_quilometragem.text),
-        data: _data,
-      ),
-    );
-    if (!mounted) return;
-    ScaffoldMessenger.of(context)
-        .avisar(novo ? 'Abastecimento registrado' : 'Abastecimento atualizado');
-    Navigator.pop(context);
+    try {
+      await widget.garagem.salvarAbastecimento(
+        Abastecimento(
+          id: _existente?.id ?? DateTime.now().microsecondsSinceEpoch.toString(),
+          combustivel: _combustivel,
+          precoPorLitro: lerDecimal(_preco.text)!,
+          litros: lerDecimal(_litros.text)!,
+          quilometragem: int.parse(_quilometragem.text),
+          data: _data,
+        ),
+      );
+    } on Exception {
+      mensageiro.avisar(falhaAoSalvar);
+      if (mounted) setState(() => _salvando = false);
+      return;
+    }
+    mensageiro.avisar(_existente == null ? 'Abastecimento registrado' : 'Abastecimento atualizado');
+    if (mounted) Navigator.pop(context);
   }
 
   Future<void> _excluir(Abastecimento existente) async {
-    final confirmado = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Excluir abastecimento?'),
-        content: Text(
+    final confirmado = await confirmarExclusao(
+      context,
+      titulo: 'Excluir abastecimento?',
+      mensagem:
           'O abastecimento de ${formatarData(existente.data)}, de '
           '${formatarMoeda(existente.valorTotal)}, será apagado e os indicadores serão '
           'recalculados.',
-        ),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancelar')),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            style: TextButton.styleFrom(foregroundColor: Theme.of(context).colorScheme.error),
-            child: const Text('Excluir'),
-          ),
-        ],
-      ),
     );
-    if (confirmado != true || !mounted) return;
+    if (!confirmado || !mounted) return;
 
     final mensageiro = ScaffoldMessenger.of(context);
     Navigator.pop(context);
@@ -371,11 +365,17 @@ class _ValorTotal extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 12),
-            Text(
-              formatarMoeda(completo ? preco * litros : 0),
-              style: tema.textTheme.headlineSmall?.copyWith(
-                fontFeatures: algarismosTabulares,
-                color: completo ? cores.onSurface : cores.onSurfaceVariant,
+            Flexible(
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerRight,
+                child: Text(
+                  formatarMoeda(completo ? Abastecimento.calcularValor(preco, litros) : 0),
+                  style: tema.textTheme.headlineSmall?.copyWith(
+                    fontFeatures: algarismosTabulares,
+                    color: completo ? cores.onSurface : cores.onSurfaceVariant,
+                  ),
+                ),
               ),
             ),
           ],

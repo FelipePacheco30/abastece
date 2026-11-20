@@ -23,7 +23,8 @@ class GraficoValores extends StatelessWidget {
 
     return LayoutBuilder(
       builder: (context, limites) {
-        final largura = (limites.maxWidth / trechos.length * 0.5).clamp(6.0, 24.0);
+        final areaDasBarras = limites.maxWidth - _larguraEixoY;
+        final largura = math.min(areaDasBarras / trechos.length * 0.5, 24.0);
         return BarChart(
           BarChartData(
             maxY: maior * 1.1,
@@ -204,7 +205,7 @@ class _EstiloGrafico {
       leftTitles: AxisTitles(
         sideTitles: SideTitles(
           showTitles: true,
-          reservedSize: 40,
+          reservedSize: _larguraEixoY,
           interval: intervalo,
           getTitlesWidget: (valor, meta) => valor == meta.max || valor == meta.min && valor != 0
               ? const SizedBox.shrink()
@@ -259,6 +260,8 @@ class _EstiloGrafico {
     ),
   );
 }
+
+const _larguraEixoY = 40.0;
 
 /// Tracejado da linha de média, repetido na legenda.
 const tracejadoMedia = [4, 4];
@@ -358,7 +361,7 @@ class _ItemLegenda extends StatelessWidget {
       children: [
         amostra,
         const SizedBox(width: 6),
-        Text(rotulo, style: Theme.of(context).textTheme.bodySmall),
+        Flexible(child: Text(rotulo, style: Theme.of(context).textTheme.bodySmall)),
       ],
     );
   }

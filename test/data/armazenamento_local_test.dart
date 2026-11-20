@@ -41,6 +41,17 @@ void main() {
     expect(reaberto.lerAbastecimentos(), isEmpty);
   });
 
+  test('descarta só os abastecimentos corrompidos', () async {
+    final armazenamento = await armazenamentoEmMemoria({
+      'abastecimentos':
+          '[{"id": "1", "combustivel": "etanol", "precoPorLitro": 5, "litros": 40,'
+          ' "quilometragem": 100, "data": "2026-10-01T00:00:00.000"},'
+          ' {"id": "2", "litros": "40"}, 7]',
+    });
+
+    expect([for (final a in armazenamento.lerAbastecimentos()) a.id], ['1']);
+  });
+
   group('ignora dados corrompidos', () {
     final casos = {
       'texto que não é JSON': {'veiculo': '{marca', 'abastecimentos': '[{'},

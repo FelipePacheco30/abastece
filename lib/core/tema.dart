@@ -57,6 +57,8 @@ ThemeData criarTema(Brightness brilho) {
     onPrimaryContainer: escuro ? const Color(0xFFA9EDE3) : const Color(0xFF0A4D48),
     secondary: escuro ? const Color(0xFFA3ACB7) : const Color(0xFF4B5563),
     onSecondary: escuro ? const Color(0xFF111418) : Colors.white,
+    secondaryContainer: escuro ? const Color(0xFF2C3238) : const Color(0xFFE6E9ED),
+    onSecondaryContainer: escuro ? const Color(0xFFE7E9EC) : const Color(0xFF1F2933),
     tertiary: escuro ? const Color(0xFFFB923C) : const Color(0xFFC2410C),
     onTertiary: escuro ? const Color(0xFF2B1300) : Colors.white,
     error: escuro ? const Color(0xFFF97066) : const Color(0xFFB42318),

@@ -6,6 +6,7 @@ import '../../core/formatos.dart';
 import '../../data/cliente_brasil_api.dart';
 import '../../models/opcao_fipe.dart';
 import '../../models/veiculo.dart';
+import '../widgets/aviso.dart';
 import '../widgets/campo_selecao.dart';
 import 'tela_selecao_fipe.dart';
 
@@ -53,6 +54,7 @@ class _TelaCadastroVeiculoState extends State<TelaCadastroVeiculo> {
       _marca = marca;
       _modelo = null;
     });
+    _cilindrada.clear();
   }
 
   Future<void> _escolherModelo() async {
@@ -64,9 +66,8 @@ class _TelaCadastroVeiculoState extends State<TelaCadastroVeiculo> {
     );
     if (modelo == null) return;
     setState(() => _modelo = modelo);
-    if (Veiculo.cilindradaDoModelo(modelo.nome) case final cilindrada?) {
-      _cilindrada.text = textoParaEdicao(cilindrada);
-    }
+    final cilindrada = Veiculo.cilindradaDoModelo(modelo.nome);
+    _cilindrada.text = cilindrada == null ? '' : textoParaEdicao(cilindrada);
   }
 
   Future<OpcaoFipe?> _selecionar({
@@ -113,15 +114,22 @@ class _TelaCadastroVeiculoState extends State<TelaCadastroVeiculo> {
     final (marca, modelo) = (_marca, _modelo);
     if (!camposValidos || marca == null || modelo == null) return;
 
+    final mensageiro = ScaffoldMessenger.of(context);
     setState(() => _salvando = true);
-    await widget.garagem.cadastrarVeiculo(
-      Veiculo(
-        marca: marca.nome,
-        modelo: modelo.nome,
-        ano: int.parse(_ano.text),
-        cilindrada: lerDecimal(_cilindrada.text)!,
-      ),
-    );
+    try {
+      await widget.garagem.cadastrarVeiculo(
+        Veiculo(
+          marca: marca.nome,
+          modelo: modelo.nome,
+          ano: int.parse(_ano.text),
+          cilindrada: lerDecimal(_cilindrada.text)!,
+        ),
+      );
+    } on Exception {
+      mensageiro.avisar(falhaAoSalvar);
+      if (mounted) setState(() => _salvando = false);
+      return;
+    }
     if (mounted) Navigator.pop(context);
   }
 

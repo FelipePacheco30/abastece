@@ -8,9 +8,13 @@ import '../models/veiculo.dart';
 /// Estado do veículo cadastrado e dos seus abastecimentos, compartilhado
 /// entre as telas. Toda alteração é gravada antes de ser exibida.
 class ControladorGaragem extends ChangeNotifier {
+  /// Abastecimentos só são carregados junto com um veículo válido, para que
+  /// registros órfãos nunca apareçam sob um novo cadastro.
   ControladorGaragem(this._armazenamento)
     : _veiculo = _armazenamento.lerVeiculo(),
-      _historico = Historico(_armazenamento.lerAbastecimentos());
+      _historico = Historico(const []) {
+    if (_veiculo != null) _historico = Historico(_armazenamento.lerAbastecimentos());
+  }
 
   final ArmazenamentoLocal _armazenamento;
   Veiculo? _veiculo;
