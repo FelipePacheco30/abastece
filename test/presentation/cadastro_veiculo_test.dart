@@ -33,7 +33,7 @@ void main() {
     await tester.tap(find.text('Salvar veículo'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Nenhum abastecimento ainda'), findsOneWidget);
+    expect(find.text('Seu painel aparece aqui'), findsOneWidget);
     await tester.tap(find.text('Veículo'));
     await tester.pumpAndSettle();
     expect(find.text('ARGO DRIVE 1.3 8V Flex'), findsOneWidget);

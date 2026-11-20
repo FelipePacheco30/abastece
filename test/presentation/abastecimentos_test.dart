@@ -1,3 +1,4 @@
+import 'package:abastece/controllers/controlador_garagem.dart';
 import 'package:abastece/data/armazenamento_local.dart';
 import 'package:abastece/models/abastecimento.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,15 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(alvo);
     await tester.pumpAndSettle();
+  }
+
+  Future<ControladorGaragem> abrirLista(
+    WidgetTester tester, {
+    List<Abastecimento> abastecimentos = const [],
+  }) async {
+    final garagem = await abrirApp(tester, veiculo: argo, abastecimentos: abastecimentos);
+    await tocar(tester, find.text('Abastecimentos'));
+    return garagem;
   }
 
   Future<void> preencher(
@@ -39,7 +49,7 @@ void main() {
   }
 
   testWidgets('registra o primeiro abastecimento como referência', (tester) async {
-    final garagem = await abrirApp(tester, veiculo: argo);
+    final garagem = await abrirLista(tester);
     expect(find.text('Nenhum abastecimento ainda'), findsOneWidget);
 
     await tocar(tester, find.text('Abastecer'));
@@ -63,7 +73,7 @@ void main() {
   });
 
   testWidgets('calcula km/L e R\$/km a partir do segundo abastecimento', (tester) async {
-    await abrirApp(tester, veiculo: argo, abastecimentos: [anterior]);
+    await abrirLista(tester, abastecimentos: [anterior]);
 
     await tocar(tester, find.text('Abastecer'));
     expect(find.text('Anterior: 1.000 km em 01/01/2024'), findsOneWidget);
@@ -74,7 +84,7 @@ void main() {
   });
 
   testWidgets('exige preço, litros e quilometragem', (tester) async {
-    await abrirApp(tester, veiculo: argo);
+    await abrirLista(tester);
 
     await tocar(tester, find.text('Abastecer'));
     await preencher(tester, preco: '0');
@@ -87,7 +97,7 @@ void main() {
   });
 
   testWidgets('a quilometragem deve ser maior que a do abastecimento anterior', (tester) async {
-    await abrirApp(tester, veiculo: argo, abastecimentos: [anterior]);
+    await abrirLista(tester, abastecimentos: [anterior]);
 
     await tocar(tester, find.text('Abastecer'));
     await preencher(tester, preco: '5', litros: '40', quilometragem: '1000');
@@ -98,7 +108,7 @@ void main() {
   });
 
   testWidgets('edita e exclui um abastecimento recalculando os indicadores', (tester) async {
-    final garagem = await abrirApp(tester, veiculo: argo, abastecimentos: historicoDeExemplo);
+    final garagem = await abrirLista(tester, abastecimentos: historicoDeExemplo);
 
     await tocar(tester, find.text('Sáb, 7 nov · 18:45'));
     expect(find.text('Editar abastecimento'), findsOneWidget);
