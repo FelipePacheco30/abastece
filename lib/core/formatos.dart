@@ -35,7 +35,7 @@ String formatarCustoPorKm(double valor) => 'R\$\u00a0${_duasCasas.format(valor)}
 String formatarCilindrada(double valor) => '${_umaCasa.format(valor)} L';
 
 String formatarNumero(double valor, {int casas = 1}) =>
-    (casas == 1 ? _umaCasa : _duasCasas).format(valor);
+    NumberFormat.decimalPatternDigits(locale: _local, decimalDigits: casas).format(valor);
 
 String formatarData(DateTime data) => _data.format(data);
 

@@ -2,24 +2,18 @@ import 'package:flutter/material.dart';
 
 import '../models/abastecimento.dart';
 
-/// Cores com significado no app, fora do esquema padrão do Material.
+/// Cores dos combustíveis, fora do esquema padrão do Material.
+///
+/// Verde-água, laranja e azul continuam distinguíveis para daltonismo
+/// (validados contra a superfície dos cartões nos dois temas). O nome do
+/// combustível sempre acompanha a cor, que nunca é a única pista.
 @immutable
 class CoresApp extends ThemeExtension<CoresApp> {
-  const CoresApp({
-    required this.etanol,
-    required this.gasolina,
-    required this.diesel,
-    required this.consumo,
-    required this.custo,
-  });
+  const CoresApp({required this.etanol, required this.gasolina, required this.diesel});
 
   final Color etanol;
   final Color gasolina;
   final Color diesel;
-
-  /// Séries de km/L e de R$/km nos gráficos.
-  final Color consumo;
-  final Color custo;
 
   static CoresApp de(BuildContext context) => Theme.of(context).extension<CoresApp>()!;
 
@@ -30,18 +24,10 @@ class CoresApp extends ThemeExtension<CoresApp> {
   };
 
   @override
-  CoresApp copyWith({
-    Color? etanol,
-    Color? gasolina,
-    Color? diesel,
-    Color? consumo,
-    Color? custo,
-  }) => CoresApp(
+  CoresApp copyWith({Color? etanol, Color? gasolina, Color? diesel}) => CoresApp(
     etanol: etanol ?? this.etanol,
     gasolina: gasolina ?? this.gasolina,
     diesel: diesel ?? this.diesel,
-    consumo: consumo ?? this.consumo,
-    custo: custo ?? this.custo,
   );
 
   @override
@@ -51,8 +37,6 @@ class CoresApp extends ThemeExtension<CoresApp> {
       etanol: Color.lerp(etanol, other.etanol, t)!,
       gasolina: Color.lerp(gasolina, other.gasolina, t)!,
       diesel: Color.lerp(diesel, other.diesel, t)!,
-      consumo: Color.lerp(consumo, other.consumo, t)!,
-      custo: Color.lerp(custo, other.custo, t)!,
     );
   }
 }
@@ -104,11 +88,9 @@ ThemeData criarTema(Brightness brilho) {
     scaffoldBackgroundColor: esquema.surface,
     extensions: [
       CoresApp(
-        etanol: escuro ? const Color(0xFF4ADE80) : const Color(0xFF15803D),
-        gasolina: escuro ? const Color(0xFFF87171) : const Color(0xFFC81E1E),
-        diesel: escuro ? const Color(0xFF60A5FA) : const Color(0xFF1D4ED8),
-        consumo: esquema.primary,
-        custo: esquema.tertiary,
+        etanol: escuro ? const Color(0xFF199E70) : const Color(0xFF179C6D),
+        gasolina: escuro ? const Color(0xFFD95926) : const Color(0xFFEB6834),
+        diesel: escuro ? const Color(0xFF3987E5) : const Color(0xFF2A78D6),
       ),
     ],
     textTheme: textos,
