@@ -38,3 +38,26 @@ Abastecimento abastecimento({
   quilometragem: quilometragem,
   data: data,
 );
+
+/// Três meses de abastecimentos de um Argo 1.3, alternando gasolina e etanol.
+final historicoDeExemplo = [
+  for (final (indice, (data, combustivel, preco, litros, km)) in [
+    (DateTime(2026, 8, 2, 7, 40), Combustivel.gasolina, 6.19, 38.2, 18240),
+    (DateTime(2026, 8, 16, 18, 15), Combustivel.gasolina, 6.24, 35.6, 18690),
+    (DateTime(2026, 8, 30, 12, 5), Combustivel.etanol, 4.29, 41.8, 19050),
+    (DateTime(2026, 9, 12, 19, 30), Combustivel.etanol, 4.35, 40.1, 19410),
+    (DateTime(2026, 9, 27, 8, 50), Combustivel.gasolina, 6.29, 36.9, 19870),
+    (DateTime(2026, 10, 10, 17, 20), Combustivel.gasolina, 6.27, 34.4, 20330),
+    (DateTime(2026, 10, 24, 9, 10), Combustivel.gasolina, 6.34, 37.3, 20780),
+    (DateTime(2026, 11, 7, 18, 45), Combustivel.etanol, 4.39, 42.6, 21150),
+    (DateTime(2026, 11, 18, 7, 55), Combustivel.gasolina, 6.31, 35.1, 21610),
+  ].indexed)
+    Abastecimento(
+      id: '${indice + 1}',
+      combustivel: combustivel,
+      precoPorLitro: preco,
+      litros: litros,
+      quilometragem: km,
+      data: data,
+    ),
+];
