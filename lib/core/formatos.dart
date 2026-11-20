@@ -30,7 +30,7 @@ String formatarKm(int valor) => '${_inteiro.format(valor)} km';
 
 String formatarKmPorLitro(double valor) => '${_umaCasa.format(valor)} km/L';
 
-String formatarCustoPorKm(double valor) => 'R\$ ${_duasCasas.format(valor)}/km';
+String formatarCustoPorKm(double valor) => 'R\$\u00a0${_duasCasas.format(valor)}/km';
 
 String formatarCilindrada(double valor) => '${_umaCasa.format(valor)} L';
 

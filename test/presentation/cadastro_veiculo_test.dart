@@ -33,7 +33,9 @@ void main() {
     await tester.tap(find.text('Salvar veículo'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Meu veículo'), findsOneWidget);
+    expect(find.text('Nenhum abastecimento ainda'), findsOneWidget);
+    await tester.tap(find.text('Veículo'));
+    await tester.pumpAndSettle();
     expect(find.text('ARGO DRIVE 1.3 8V Flex'), findsOneWidget);
     expect(find.text('1,3 L'), findsOneWidget);
     expect(garagem.veiculo?.ano, 2022);
@@ -129,6 +131,8 @@ void main() {
         abastecimento(id: '2', quilometragem: 1400, data: DateTime(2026, 11, 10)),
       ],
     );
+    await tester.tap(find.text('Veículo'));
+    await tester.pumpAndSettle();
 
     await tester.tap(find.text('Excluir veículo'));
     await tester.pumpAndSettle();

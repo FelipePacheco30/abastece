@@ -4,6 +4,7 @@ import '../../controllers/controlador_garagem.dart';
 import '../../core/formatos.dart';
 import '../../core/tema.dart';
 import '../../models/veiculo.dart';
+import '../widgets/aviso.dart';
 
 /// Dados do veículo cadastrado e a opção de excluí-lo.
 class AbaVeiculo extends StatelessWidget {
@@ -21,7 +22,7 @@ class AbaVeiculo extends StatelessWidget {
     if (confirmado != true) return;
 
     await garagem.excluirVeiculo();
-    mensageiro.showSnackBar(const SnackBar(content: Text('Veículo e abastecimentos excluídos')));
+    mensageiro.avisar('Veículo e abastecimentos excluídos');
   }
 
   @override
