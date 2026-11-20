@@ -163,6 +163,7 @@ ThemeData criarTema(Brightness brilho) {
       style: SegmentedButton.styleFrom(
         minimumSize: const Size.fromHeight(48),
         backgroundColor: esquema.surfaceContainerLowest,
+        foregroundColor: esquema.onSurface,
         selectedBackgroundColor: esquema.primaryContainer,
         selectedForegroundColor: esquema.onPrimaryContainer,
         side: BorderSide(color: esquema.outline),

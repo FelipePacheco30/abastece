@@ -9,6 +9,7 @@ class CampoSelecao extends StatelessWidget {
     required this.aoTocar,
     this.dica,
     this.erro,
+    this.icone = Icons.chevron_right_rounded,
   });
 
   final String rotulo;
@@ -20,6 +21,7 @@ class CampoSelecao extends StatelessWidget {
   /// Texto de apoio exibido abaixo do campo enquanto não há erro.
   final String? dica;
   final String? erro;
+  final IconData icone;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +45,7 @@ class CampoSelecao extends StatelessWidget {
             enabled: habilitado,
             helperText: dica,
             errorText: erro,
-            suffixIcon: const Icon(Icons.chevron_right_rounded),
+            suffixIcon: Icon(icone),
           ),
           child: valor == null
               ? null

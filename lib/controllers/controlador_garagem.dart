@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 import '../data/armazenamento_local.dart';
+import '../models/abastecimento.dart';
 import '../models/historico.dart';
 import '../models/veiculo.dart';
 
@@ -28,6 +29,25 @@ class ControladorGaragem extends ChangeNotifier {
     await _armazenamento.excluirVeiculo();
     _veiculo = null;
     _historico = Historico(const []);
+    notifyListeners();
+  }
+
+  /// Registra um abastecimento ou substitui o que tem o mesmo `id`.
+  Future<void> salvarAbastecimento(Abastecimento abastecimento) => _gravarAbastecimentos([
+    for (final a in _historico.abastecimentos)
+      if (a.id != abastecimento.id) a,
+    abastecimento,
+  ]);
+
+  Future<void> excluirAbastecimento(String id) => _gravarAbastecimentos([
+    for (final a in _historico.abastecimentos)
+      if (a.id != id) a,
+  ]);
+
+  Future<void> _gravarAbastecimentos(List<Abastecimento> abastecimentos) async {
+    final historico = Historico(abastecimentos);
+    await _armazenamento.salvarAbastecimentos(historico.abastecimentos);
+    _historico = historico;
     notifyListeners();
   }
 }

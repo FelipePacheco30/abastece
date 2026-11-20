@@ -45,6 +45,8 @@ class Historico {
 
   bool get vazio => trechos.isEmpty;
 
+  List<Abastecimento> get abastecimentos => [for (final t in trechos) t.abastecimento];
+
   Iterable<Trecho> get comIndicadores => trechos.where((t) => t.temIndicadores);
 
   double get gastoTotal => trechos.fold(0, (soma, t) => soma + t.abastecimento.valorTotal);
