@@ -347,6 +347,7 @@ class _ValorTotal extends StatelessWidget {
         child: Row(
           children: [
             Expanded(
+              flex: 2,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -365,15 +366,18 @@ class _ValorTotal extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 12),
-            Flexible(
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
+            Expanded(
+              flex: 3,
+              child: Align(
                 alignment: Alignment.centerRight,
-                child: Text(
-                  formatarMoeda(completo ? Abastecimento.calcularValor(preco, litros) : 0),
-                  style: tema.textTheme.headlineSmall?.copyWith(
-                    fontFeatures: algarismosTabulares,
-                    color: completo ? cores.onSurface : cores.onSurfaceVariant,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    formatarMoeda(completo ? Abastecimento.calcularValor(preco, litros) : 0),
+                    style: tema.textTheme.headlineSmall?.copyWith(
+                      fontFeatures: algarismosTabulares,
+                      color: completo ? cores.onSurface : cores.onSurfaceVariant,
+                    ),
                   ),
                 ),
               ),
