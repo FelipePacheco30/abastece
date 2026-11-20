@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../controllers/controlador_garagem.dart';
 import 'aba_abastecimentos.dart';
+import 'aba_painel.dart';
 import 'aba_veiculo.dart';
 import 'tela_abastecimento.dart';
 
@@ -16,7 +17,7 @@ class TelaPrincipal extends StatefulWidget {
 }
 
 class _TelaPrincipalState extends State<TelaPrincipal> {
-  var _aba = _Aba.abastecimentos;
+  var _aba = _Aba.painel;
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +26,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
     return Scaffold(
       appBar: AppBar(title: Text(_aba.titulo)),
       body: switch (_aba) {
+        _Aba.painel => AbaPainel(garagem: garagem),
         _Aba.abastecimentos => AbaAbastecimentos(garagem: garagem),
         _Aba.veiculo => AbaVeiculo(garagem: garagem),
       },
@@ -57,6 +59,12 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
 }
 
 enum _Aba {
+  painel(
+    rotulo: 'Painel',
+    titulo: 'Painel',
+    icone: Icons.insights_outlined,
+    iconeSelecionado: Icons.insights_rounded,
+  ),
   abastecimentos(
     rotulo: 'Abastecimentos',
     titulo: 'Abastecimentos',
