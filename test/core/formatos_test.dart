@@ -25,7 +25,7 @@ void main() {
     final data = DateTime(2026, 11, 7, 18, 45);
 
     expect(formatarData(data), '07/11/2026');
-    expect(formatarDataHora(data), '07/11/2026 às 18:45');
+    expect(formatarHora(data), '18:45');
     expect(formatarDiaSemana(data), 'Sáb, 7 nov');
     expect(formatarMesAno(data), 'Novembro de 2026');
   });

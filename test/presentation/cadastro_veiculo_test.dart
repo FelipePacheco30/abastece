@@ -1,5 +1,6 @@
 import 'package:abastece/data/armazenamento_local.dart';
 import 'package:abastece/presentation/screens/tela_boas_vindas.dart';
+import 'package:abastece/presentation/widgets/campo_selecao.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
@@ -13,7 +14,7 @@ void main() {
   setUpAll(() => initializeDateFormatting('pt_BR'));
 
   Future<void> escolher(WidgetTester tester, String campo, String busca, String opcao) async {
-    await tester.tap(find.text(campo));
+    await tester.tap(find.widgetWithText(CampoSelecao, campo));
     await tester.pumpAndSettle();
     await tester.enterText(find.byType(TextField), busca);
     await tester.pumpAndSettle();
@@ -70,16 +71,19 @@ void main() {
     expect(find.text('Cadastrar veículo'), findsOneWidget);
   });
 
-  testWidgets('trocar a marca limpa o modelo escolhido', (tester) async {
+  testWidgets('trocar a marca limpa o modelo e a cilindrada', (tester) async {
     await abrirApp(tester);
     await tester.tap(find.text('Cadastrar veículo'));
     await tester.pumpAndSettle();
     await escolher(tester, 'Marca', 'fiat', 'Fiat');
     await escolher(tester, 'Modelo', 'argo drive 1.3', 'ARGO DRIVE 1.3 8V Flex');
 
+    expect(find.text('1,3'), findsOneWidget);
+
     await escolher(tester, 'Marca', 'ford', 'Ford');
 
     expect(find.text('ARGO DRIVE 1.3 8V Flex'), findsNothing);
+    expect(find.text('1,3'), findsNothing);
   });
 
   testWidgets('mostra a falha da BrasilAPI e permite tentar de novo', (tester) async {
@@ -96,14 +100,14 @@ void main() {
     await tester.tap(find.text('Marca'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Não foi possível carregar as marcas'), findsOneWidget);
+    expect(find.text('Não foi possível carregar a lista'), findsOneWidget);
     expect(find.textContaining('Sem conexão com a internet'), findsOneWidget);
 
     online = true;
     await tester.tap(find.text('Tentar novamente'));
     await tester.pumpAndSettle();
 
-    expect(find.text('108 marcas'), findsOneWidget);
+    expect(find.text('108 resultados'), findsOneWidget);
   });
 
   testWidgets('busca ignora acentos e maiúsculas e avisa quando não encontra', (tester) async {

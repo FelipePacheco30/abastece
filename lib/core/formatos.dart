@@ -43,8 +43,6 @@ String formatarDiaMes(DateTime data) => _diaMes.format(data);
 
 String formatarHora(DateTime data) => _hora.format(data);
 
-String formatarDataHora(DateTime data) => '${_data.format(data)} às ${_hora.format(data)}';
-
 /// "Ter, 3 nov" — usado nas listas, onde o ano aparece no cabeçalho do mês.
 String formatarDiaSemana(DateTime data) =>
     _capitalizar(_diaSemana.format(data).replaceAll('.', ''));
